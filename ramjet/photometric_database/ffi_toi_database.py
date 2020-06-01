@@ -1,6 +1,8 @@
 """
 Code to represent a database to train to find exoplanet transits in FFI data based on known TOI dispositions.
 """
+from functools import partial
+
 import requests
 import numpy as np
 import pandas as pd
@@ -39,12 +41,12 @@ class FfiToiDatabase(InjectedWithAdditionalExplicitInjectedNegativeDatabase):
         """
         synthetic_signal_paths_dataset = self.paths_dataset_from_list_or_generator_factory(
             self.get_all_synthetic_signal_paths)
-        training_lightcurve_path_generator = self.tess_ffi_data_interface.paths_generator_from_sql_table(
+        training_lightcurve_path_generator = partial(self.tess_ffi_data_interface.paths_generator_from_sql_table,
             dataset_splits=list(range(8)), magnitudes=[9]
         )
         training_lightcurve_paths_dataset = self.paths_dataset_from_list_or_generator_factory(
             training_lightcurve_path_generator)
-        validation_lightcurve_path_generator = self.tess_ffi_data_interface.paths_generator_from_sql_table(
+        validation_lightcurve_path_generator = partial(self.tess_ffi_data_interface.paths_generator_from_sql_table,
             dataset_splits=[8], magnitudes=[9]
         )
         validation_lightcurve_paths_dataset = self.paths_dataset_from_list_or_generator_factory(
