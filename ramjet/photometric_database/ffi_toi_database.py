@@ -52,7 +52,7 @@ class FfiToiDatabase(InjectedWithAdditionalExplicitInjectedNegativeDatabase):
         validation_lightcurve_paths_dataset = self.paths_dataset_from_list_or_generator_factory(
             validation_lightcurve_path_generator)
         negative_synthetic_signal_paths = self.paths_dataset_from_list_or_generator_factory(
-            self.get_all_negative_synthetic_signal_paths)
+            training_lightcurve_path_generator)
         explicit_negative_synthetic_signal_paths = self.paths_dataset_from_list_or_generator_factory(
             self.get_explicit_negative_synthetic_signal_paths)
         shuffled_training_lightcurve_paths_dataset = training_lightcurve_paths_dataset.repeat().shuffle(
@@ -202,9 +202,6 @@ class FfiToiDatabase(InjectedWithAdditionalExplicitInjectedNegativeDatabase):
         synthetic_signal_names = [path.name for path in self.synthetic_signal_directory.glob('**/*.fits')]
         explicit_negative_lightcurve_paths = [path for path in explicit_negative_lightcurve_paths if path.name
                                               not in synthetic_signal_names]
-        hand_selected_negative_data_frame = pd.read_csv(self.data_directory.joinpath('explicit_negatives.csv'))
-        hand_selected_negative_paths = list(hand_selected_negative_data_frame['Lightcurve path'].values)
-        explicit_negative_lightcurve_paths += hand_selected_negative_paths
         return explicit_negative_lightcurve_paths
 
 
